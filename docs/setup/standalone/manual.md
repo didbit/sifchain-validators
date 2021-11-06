@@ -157,3 +157,46 @@ cosmovisor start --x-crisis-skip-assert-invariants
 and it'll start accordingly and sync from the height where the snapshot was taken (for BetaNet), or from genesis (for TestNet).
 
 It's *highly* recommended that you consider running `cosmovisor` under `systemd` or `supervisord`, or some other process control system.
+
+For example add a service 
+
+```console
+sudo tee /etc/systemd/system/sifnoded.service > /dev/null <<EOF
+[Unit]
+Description=Sifchain Node
+After=network-online.target
+
+[Service]
+User=$USER
+Environment=export DAEMON_HOME=/root/.sifnoded
+Environment=export DAEMON_RESTART_AFTER_UPGRADE=true
+Environment=export DAEMON_ALLOW_DOWNLOAD_BINARIES=true
+Environment=export DAEMON_NAME=sifnoded
+Environment=export UNSAFE_SKIP_BACKUP=true
+ExecStart=`which cosmovisor` start --x-crisis-skip-assert-invariants
+Restart=always
+RestartSec=3
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target
+EOF
+```
+
+Enable that service
+
+```console
+systemctl enable sifnoded
+```
+
+Start or restart service
+
+```console
+systemctl restart sifnoded
+```
+
+To see logs 
+
+```console
+journalctl -u sifnoded -f
+```
