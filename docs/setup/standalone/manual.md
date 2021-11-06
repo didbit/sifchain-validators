@@ -158,7 +158,7 @@ and it'll start accordingly and sync from the height where the snapshot was take
 
 It's *highly* recommended that you consider running `cosmovisor` under `systemd` or `supervisord`, or some other process control system.
 
-For example add a service 
+For example, add a service 
 
 ```console
 sudo tee /etc/systemd/system/sifnoded.service > /dev/null <<EOF
